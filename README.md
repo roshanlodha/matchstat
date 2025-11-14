@@ -12,39 +12,47 @@ Applicant strength is summarized as a scalar score $S$ built from academic and r
 - **Home program bonus:** a fixed positive term.
 
 The net score is
-$$
+
+```math
 S = \beta_{\text{Step2}} z_{\text{Step2}}
     - \gamma_{\text{CCLCM}} \cdot \text{penalty}
     + \gamma_{\text{research}} \cdot \text{research\_score}
     + \gamma_{\text{home}}.
-$$
+```
 
 ## Program Difficulty Profile
 
 Each rank position $r$ receives a baseline difficulty that decays with rank:
-$$
-D_r = \text{base} + A \cdot \exp\!\bigl(-\lambda (r-1)^{p}\bigr) + \varepsilon_r,
-$$
+
+```math
+D_r = \text{base} + A \cdot \exp\!\bigl(-\lambda (r-1)^{p}\bigr) + \varepsilon_r
+```
+
 where $A$ is the amplitude, $\lambda$ is the decay rate, $p$ controls curvature, and $\varepsilon_r \sim \mathcal{N}(0, \sigma^2)$ introduces heterogeneity between similarly ranked programs.
 
 ## Per-Program Match Probability
 
 The probability of receiving an offer from rank $r$ is modeled with a logistic link:
-$$
-p_r = \frac{1}{1 + \exp(-( \alpha + S - D_r ))},
-$$
+
+```math
+p_r = \frac{1}{1 + \exp(-( \alpha + S - D_r ))}
+```
+
 clipped to $[10^{-9}, 1 - 10^{-9}]$ for numerical stability. Here $\alpha$ is a global intercept calibrated from tuning experiments.
 
 ## Rank Outcome Distribution
 
 Assuming independence between programs, the probability of matching **exactly** at rank $k$ is
-$$
-\Pr(K = k) = \left( \prod_{j < k} (1 - p_j) \right) p_k,
-$$
+
+```math
+\Pr(K = k) = \left( \prod_{j < k} (1 - p_j) \right) p_k
+```
+
 and the probability of going unmatched is
-$$
-\Pr(\text{unmatched}) = \prod_{j=1}^{N} (1 - p_j).
-$$
+
+```math
+\Pr(\text{unmatched}) = \prod_{j=1}^{N} (1 - p_j)
+```
 
 These probabilities allow computation of:
 
